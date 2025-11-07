@@ -5,10 +5,12 @@ from detectron2.data import MetadataCatalog
 coco17_all_classes = MetadataCatalog.get('coco_2017_val').thing_classes
 
 contiguous_id_to_thing_dataset_id = {countId: catId for catId, countId in MetadataCatalog.get('coco_2017_val').thing_dataset_id_to_contiguous_id.items()}
-
+print(contiguous_id_to_thing_dataset_id)
 # Dataset Names
 LVIS = "lvis_v1_train"
 COCO_OVD = "coco_2017_ovd_b_train"
+
+GEOMAP_SPLIT_1 = "geomap_train_oneshot_s1"
 
 COCO_2017_SPLIT_1 = 'coco_2017_train_oneshot_s1'
 COCO_2017_SPLIT_2 = 'coco_2017_train_oneshot_s2'
@@ -41,6 +43,19 @@ def get_oneshot_split(split):
     return [coco17_all_classes[cid] for cid in range(80) if contiguous_id_to_thing_dataset_id[cid] % 4 != split]
 
 
+geomap_all_classes = None
+with open("geomap_labels.txt","r") as f:
+    lines = f.readlines()
+    geomap_all_classes = lines[0].split(",")
+#geomap_all_classes numbes:544
+def get_oneshot_split_geomap(split):
+    return [geomap_all_classes[cid] for cid in range(len(geomap_all_classes)) if cid % 4 != split]
+
+print("*********yzw*********")
+test_print = get_oneshot_split_geomap(1)
+print(test_print)
+print(len(test_print))
+print("*********yzw*********")
 
 SEEN_CLS_DICT = {
     COCO_OVD: COCO_SEEN_CLS,
@@ -58,6 +73,7 @@ SEEN_CLS_DICT = {
     PASCAL_VOC_SPLIT_1: voc_split_1_seen_classes,
     PASCAL_VOC_SPLIT_2: voc_split_2_seen_classes,
     PASCAL_VOC_SPLIT_3: voc_split_3_seen_classes,
+    GEOMAP_SPLIT_1: get_oneshot_split_geomap(1),
 }
 
 
@@ -75,7 +91,8 @@ ALL_CLS_DICT = {
     
     PASCAL_VOC_SPLIT_1: voc_all_classes_1,
     PASCAL_VOC_SPLIT_2: voc_all_classes_2,
-    PASCAL_VOC_SPLIT_3: voc_all_classes_3
+    PASCAL_VOC_SPLIT_3: voc_all_classes_3,
+    GEOMAP_SPLIT_1: geomap_all_classes
 }
 
 

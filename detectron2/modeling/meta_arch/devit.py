@@ -1168,6 +1168,10 @@ class OpenSetDetectorWithExamples(nn.Module):
                 indexes = torch.arange(0, num_classes, device=self.device)[None, None, :].repeat(bs, spatial_size, 1)
                 for i in range(class_topk):
                     cmask = indexes != class_indices[:, i].view(-1, 1, 1)
+                    expected_elements = bs * spatial_size * (num_classes - 1)
+                    actual_elements = indexes[cmask].numel()
+                    print(f"expected_elements:{expected_elements},actual_elements:{actual_elements},bs:{bs},spatial_size:{spatial_size}")
+                    print(f"indexes:{indexes[cmask].shape},cmask:{cmask.shape}")
                     _ = torch.gather(feats, 2, indexes[cmask].view(bs, spatial_size, num_classes - 1)) # N x spatial x classes-1
                     other_classes.append(_[:, :, None, :]) 
             else:

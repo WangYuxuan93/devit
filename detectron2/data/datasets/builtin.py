@@ -28,6 +28,7 @@ from .coco import load_sem_seg, register_coco_instances
 from .coco_panoptic import register_coco_panoptic, register_coco_panoptic_separated
 from .lvis import get_lvis_instances_meta, register_lvis_instances
 from .pascal_voc import register_pascal_voc
+from .geomap import register_geomap_dataset
 
 # ==== Predefined datasets and splits for COCO ==========
 
@@ -314,14 +315,21 @@ def register_all_ade20k(root):
         )
 
 
+
+
+def register_all_geomap(root):
+    register_geomap_dataset("geomap_train_oneshot_s1",root)
+    register_geomap_dataset("geomap_val_oneshot_s1",root)
 # True for open source;
 # Internally at fb, we register them elsewhere
 if __name__.endswith(".builtin"):
     # Assume pre-defined datasets live in `./datasets`.
     _root = os.getenv("DETECTRON2_DATASETS", "datasets")
+    print(f"_root path:{_root}")
     register_all_coco(_root)
     register_all_lvis(_root)
     register_all_cityscapes(_root)
     register_all_cityscapes_panoptic(_root)
     register_all_pascal_voc(_root)
     register_all_ade20k(_root)
+    register_all_geomap(_root)

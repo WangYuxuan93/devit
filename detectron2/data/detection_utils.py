@@ -192,6 +192,10 @@ def check_image_size(dataset_dict, image):
     if "width" in dataset_dict or "height" in dataset_dict:
         image_wh = (image.shape[1], image.shape[0])
         expected_wh = (dataset_dict["width"], dataset_dict["height"])
+        #print("********yzw********")
+        #print("image_wh:",image_wh)
+        #print("dataset_dict:",dataset_dict)
+        #print("********yzw********")
         if not image_wh == expected_wh:
             raise SizeMismatchError(
                 "Mismatched image shape{}, got {}, expect {}.".format(
