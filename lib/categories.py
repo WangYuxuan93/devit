@@ -44,18 +44,37 @@ def get_oneshot_split(split):
 
 
 geomap_all_classes = None
-with open("geomap_labels.txt","r") as f:
+"""
+with open("geomap_labels.txt","r", encoding="utf-8") as f:
     lines = f.readlines()
     geomap_all_classes = lines[0].split(",")
+"""
+train_cat_file = "datasets/geomap/train_labels.txt"
+val_cat_file = "datasets/geomap/val_labels.txt"
+with open(train_cat_file, "r", encoding="utf-8") as f:
+    train_labels = f.read().strip().split("\n")
+with open(val_cat_file, "r", encoding="utf-8") as f:
+    valid_labels = f.read().strip().split("\n")
+
+geomap_all_classes = train_labels.copy()
+for label in valid_labels:
+    if label in geomap_all_classes:
+        print (f"###### valid label: {label} in train label set ######")
+        exit()
+    else:
+        geomap_all_classes.append(label)
+
+print (f"###### Number geomap all label:{len(geomap_all_classes)}\n###### Geomap valid label:{len(valid_labels)}\n###### Geomap train label:{len(train_labels)}")
+
 #geomap_all_classes numbes:544
 def get_oneshot_split_geomap(split):
     return [geomap_all_classes[cid] for cid in range(len(geomap_all_classes)) if cid % 4 != split]
 
-print("*********yzw*********")
-test_print = get_oneshot_split_geomap(1)
-print(test_print)
-print(len(test_print))
-print("*********yzw*********")
+#print("*********yzw*********")
+#test_print = get_oneshot_split_geomap(1)
+#print(test_print)
+#print(len(test_print))
+#print("*********yzw*********")
 
 SEEN_CLS_DICT = {
     COCO_OVD: COCO_SEEN_CLS,
@@ -73,7 +92,7 @@ SEEN_CLS_DICT = {
     PASCAL_VOC_SPLIT_1: voc_split_1_seen_classes,
     PASCAL_VOC_SPLIT_2: voc_split_2_seen_classes,
     PASCAL_VOC_SPLIT_3: voc_split_3_seen_classes,
-    GEOMAP_SPLIT_1: get_oneshot_split_geomap(1),
+    GEOMAP_SPLIT_1: valid_labels,
 }
 
 

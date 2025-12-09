@@ -315,21 +315,31 @@ def register_all_ade20k(root):
         )
 
 
-
-
 def register_all_geomap(root):
-    register_geomap_dataset("geomap_train_oneshot_s1",root)
-    register_geomap_dataset("geomap_val_oneshot_s1",root)
+    #register_geomap_dataset("geomap_train_oneshot_s1",root)
+    #register_geomap_dataset("geomap_val_oneshot_s1",root)
+    SPLITS = [
+        ("geomap_val_oneshot_s1", "geomap/images/val", "geomap/annotations_val.json"),
+        ("geomap_train_oneshot_s1", "geomap/images/train", "geomap/annotations_train.json")
+    ]
+    for name, image_root, json_file in SPLITS:
+        register_coco_instances(
+                        name,
+                        {}, # empty metadata, it will be overwritten in load_coco_json() function
+                        os.path.join(root, json_file) if "://" not in json_file else json_file,
+                        os.path.join(root, image_root),
+                    )
+
 # True for open source;
 # Internally at fb, we register them elsewhere
 if __name__.endswith(".builtin"):
     # Assume pre-defined datasets live in `./datasets`.
     _root = os.getenv("DETECTRON2_DATASETS", "datasets")
     print(f"_root path:{_root}")
+    register_all_geomap(_root)
     register_all_coco(_root)
     register_all_lvis(_root)
     register_all_cityscapes(_root)
     register_all_cityscapes_panoptic(_root)
     register_all_pascal_voc(_root)
     register_all_ade20k(_root)
-    register_all_geomap(_root)
