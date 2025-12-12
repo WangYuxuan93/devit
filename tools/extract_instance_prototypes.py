@@ -11,6 +11,7 @@ sys.path.append(osp.join(osp.dirname(__file__), ".."))
 
 from detectron2.data import build_detection_test_loader, get_detection_dataset_dicts, DatasetCatalog, MetadataCatalog
 from detectron2.data import transforms as T
+
 from tqdm.auto import tqdm
 from torchvision.transforms import functional as tvF
 import torchvision as tv
@@ -219,7 +220,11 @@ def main(model='vitl14', dataset='fs_coco17_support_novel_30shot', use_bbox='yes
                             dataset['patch_tokens'].append(stuff_tokens.cpu())
                             dataset['labels'].append(sem_id)
                 else:
-                    masks_used = instances.gt_masks.tensor
+                    if instances.has("gt_masks"):
+                        masks_used = instances.gt_masks.tensor
+                    else:
+                        H, W = image.shape[1], image.shape[2]
+                        masks_used = to_mask(instances.gt_boxes.tensor, H, W).to(instances.gt_boxes.device)
                     if use_bbox:
                         bbox_masks = to_mask(instances.gt_boxes.tensor,
                                             masks_used.shape[1], masks_used.shape[2]).to(masks_used.device)
