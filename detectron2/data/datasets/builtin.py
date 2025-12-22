@@ -314,13 +314,13 @@ def register_all_ade20k(root):
             ignore_label=255,
         )
 
-
 def register_all_geomap(root):
     #register_geomap_dataset("geomap_train_oneshot_s1",root)
     #register_geomap_dataset("geomap_val_oneshot_s1",root)
     SPLITS = [
-        ("geomap_val_oneshot_s1", "geomap/images/val", "geomap/annotations_val.json"),
-        ("geomap_train_oneshot_s1", "geomap/images/train", "geomap/annotations_train.json")
+        ("geomap_point_valid", "geomap/images/val", "geomap/annotations/geomap_point_valid.json"),
+        ("geomap_point_train_oneshot_s1", "geomap/images/train", "geomap/annotations/geomap_point_train_oneshot_s1.json"),
+        ("geomap_point_novel_oneshot_s1_r50", "geomap/images/val", "geomap/annotations/geomap_point_novel_oneshot_s1_r50.json"),
     ]
     for name, image_root, json_file in SPLITS:
         register_coco_instances(

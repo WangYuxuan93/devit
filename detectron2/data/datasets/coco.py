@@ -75,9 +75,13 @@ def load_coco_json(json_file, image_root, dataset_name=None, extra_annotation_ke
         meta = MetadataCatalog.get(dataset_name)
         cat_ids = sorted(coco_api.getCatIds())
         cats = coco_api.loadCats(cat_ids)
+        #print ("\ncat_ids: ", cat_ids)
+        #print ("\ncats: ", cats)
         # ! The categories in a custom json file may not be sorted.
         thing_classes = [c["name"] for c in sorted(cats, key=lambda x: x["id"])]
+        #print ("\nthing_classes: {}\n".format(thing_classes))
         meta.thing_classes = thing_classes
+        
 
         # In COCO, certain category ids are artificially removed,
         # and by convention they are always ignored.
@@ -96,6 +100,7 @@ Category ids in annotations are not in [1, #categories]! We'll apply a mapping f
                 )
         id_map = {v: i for i, v in enumerate(cat_ids)}
         meta.thing_dataset_id_to_contiguous_id = id_map
+        #print (meta)
 
     # sort indices for reproducible results
     img_ids = sorted(coco_api.imgs.keys())
@@ -142,7 +147,7 @@ Category ids in annotations are not in [1, #categories]! We'll apply a mapping f
         )
 
     imgs_anns = list(zip(imgs, anns))
-    logger.info("Loaded {} images in COCO format from {}".format(len(imgs_anns), json_file))
+    logger.info("Loaded {} images ({} annotations) in COCO format from {}".format(len(imgs_anns), total_num_anns, json_file))
 
     dataset_dicts = []
 
@@ -529,6 +534,11 @@ if __name__ == "__main__":
     dicts = load_coco_json(sys.argv[1], sys.argv[2], sys.argv[3])
     logger.info("Done loading {} samples.".format(len(dicts)))
 
+    from lib.categories import SEEN_CLS_DICT, ALL_CLS_DICT
+    #print ("coco oneshot s1 seen cls:", SEEN_CLS_DICT["coco_2017_train_oneshot_s1"])
+    #print ("coco oneshot s1 all cls:", ALL_CLS_DICT["coco_2017_train_oneshot_s1"])
+    #print ("geomap point oneshot s1 seen cls:", SEEN_CLS_DICT["geomap_point_train_oneshot_s1"])
+    #print ("geomap point oneshot s1 all cls:", ALL_CLS_DICT["geomap_point_train_oneshot_s1"])
     dirname = "coco-data-vis"
     os.makedirs(dirname, exist_ok=True)
     for d in dicts:

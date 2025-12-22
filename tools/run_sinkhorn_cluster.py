@@ -89,7 +89,8 @@ def main(inp,
         origin_thing_classes = []
         
         for ci, cls_name in enumerate(thing_classes):
-            ori_cls_name = cls_name.split('-')[0]
+            #ori_cls_name = cls_name.split('-')[0]
+            ori_cls_name = cls_name.rsplit('-', 1)[0]
             if ori_cls_name not in origin_thing_classes:
                 origin_thing_classes.append(ori_cls_name)
             tokens_count[ori_cls_name].append(((labels == ci).sum().item(), ci))

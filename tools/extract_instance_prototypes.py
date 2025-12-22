@@ -250,9 +250,6 @@ def main(model='vitl14', dataset='fs_coco17_support_novel_30shot', use_bbox='yes
                 bar.update()
     name = dataset_name + '.' + model_name
 
-    if use_aug:
-        name += '.aug'
-
     if 'stuff' in dataset_name:
         name += f'.c{n_clst}'
 
